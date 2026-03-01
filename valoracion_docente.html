@@ -401,6 +401,33 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* Confeti */
+  .confeti-piece {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confeti-caer 0.9s ease-out forwards;
+  }
+
+  @keyframes confeti-caer {
+    0%   { transform: translate(0,0) rotate(0deg) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.3); opacity: 0; }
+  }
+
+  .smile-btn.animando {
+    animation: pulso-seleccion 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes pulso-seleccion {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.25); }
+    100% { transform: translateY(-4px) scale(1.05); }
+  }
+
+
   .mensaje-error {
     display: none;
     margin-top: 16px;
@@ -520,6 +547,36 @@
   const clases  = ['selected-red','selected-orange','selected-green'];
   const rings   = ['ring-red','ring-orange','ring-green'];
 
+
+  function lanzarConfeti(btn) {
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const colores = ['#c9a84c','#e8c97a','#fff','#e53e3e','#dd6b20','#f0e68c','#ffd700'];
+
+    for (let i = 0; i < 22; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confeti-piece';
+      const angulo = (Math.PI * 2 / 22) * i + (Math.random() * 0.3);
+      const dist = 60 + Math.random() * 60;
+      piece.style.left = cx + 'px';
+      piece.style.top = cy + 'px';
+      piece.style.background = colores[Math.floor(Math.random() * colores.length)];
+      piece.style.setProperty('--tx', Math.cos(angulo) * dist + 'px');
+      piece.style.setProperty('--ty', Math.sin(angulo) * dist + 'px');
+      piece.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+      piece.style.width = (5 + Math.random() * 6) + 'px';
+      piece.style.height = (5 + Math.random() * 6) + 'px';
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 950);
+    }
+
+    btn.classList.remove('animando');
+    void btn.offsetWidth;
+    btn.classList.add('animando');
+    setTimeout(() => btn.classList.remove('animando'), 400);
+  }
+
   function seleccionar(valor, btnId, claseSel, claseRing) {
     valoracion = valor;
     document.getElementById('error-smile').style.display = 'none';
@@ -529,6 +586,7 @@
     });
     document.getElementById(btnId).classList.add(claseSel);
     document.getElementById(btnId.replace('btn','svg')).classList.add(claseRing);
+    lanzarConfeti(document.getElementById(btnId));
   }
 
   function enviar() {
