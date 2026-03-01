@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Código QR - Valoración Docente</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=DM+Sans:wght@300;400;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #0a0a0a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .card {
+    background: #151515;
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 24px;
+    padding: 48px 40px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(201,168,76,0.05);
+    position: relative;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: #c9a84c;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    color: #f5f0e8;
+    font-size: 1.8rem;
+    margin-bottom: 6px;
+  }
+
+  h1 span { color: #c9a84c; font-style: italic; }
+
+  .subtitle {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .qr-wrapper {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    display: inline-block;
+    margin-bottom: 28px;
+    box-shadow: 0 0 40px rgba(201,168,76,0.15);
+  }
+
+  #qrcode canvas, #qrcode img {
+    display: block;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+    margin: 24px 0;
+  }
+
+  .instruccion {
+    color: #888;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .instruccion strong { color: #c9a84c; }
+
+  .btn-imprimir {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #8a6f2e, #c9a84c, #e8c97a);
+    color: #0a0a0a;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-imprimir:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(201,168,76,0.3);
+  }
+
+  .url-box {
+    margin-top: 20px;
+    background: rgba(201,168,76,0.07);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 12px;
+    padding: 12px 16px;
+    text-align: left;
+  }
+
+  .url-label {
+    font-size: 0.65rem;
+    color: #c9a84c;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .url-link {
+    font-size: 0.72rem;
+    color: #c9a84c;
+    word-break: break-all;
+    line-height: 1.6;
+    font-family: monospace;
+    text-decoration: none;
+    display: block;
+  }
+
+  .url-link:hover { text-decoration: underline; }
+
+  @media print {
+    body { background: white; }
+    .card { border: none; box-shadow: none; background: white; }
+    .badge, .btn-imprimir, .instruccion { display: none; }
+    h1 { color: #0a0a0a; }
+    h1 span { color: #c9a84c; }
+    .subtitle { color: #333; }
+    .url-text { color: #333; }
+    .card::before { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="badge">📱 Código QR</div>
+  <h1>Valora tu <span>Clase</span></h1>
+  <p class="subtitle">Apunta con la cámara de tu móvil y comparte tu opinión en segundos</p>
+
+  <div class="qr-wrapper">
+    <div id="qrcode"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="instruccion">
+    📷 <strong>Abre la cámara</strong> de tu móvil<br>
+    🎯 <strong>Apunta al código</strong> QR<br>
+    ✅ <strong>Toca el enlace</strong> que aparece
+  </p>
+
+  <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir código QR</button>
+
+  <div class="url-box">
+    <p class="url-label">🔗 Enlace directo</p>
+    <a class="url-link" href="https://pompompoppy3-hash.github.io/valoracion-docente/valoracion_docente.html" target="_blank">
+      https://pompompoppy3-hash.github.io/valoracion-docente/valoracion_docente.html
+    </a>
+  </div>
+</div>
+
+<script>
+  new QRCode(document.getElementById("qrcode"), {
+    text: "https://pompompoppy3-hash.github.io/valoracion-docente/valoracion_docente.html",
+    width: 220,
+    height: 220,
+    colorDark: "#0a0a0a",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+</script>
+</body>
+</html>
